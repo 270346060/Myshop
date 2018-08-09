@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="myshop.mapper.CellphoneMapper">
+	<select id="search" resultType="Cellphone">
+		select * from cellphone
+		<where>
+			<if test="brand !=null">
+				BRAND = #{brand}
+			</if>
+			<if test="os != null">
+				and OS = #{os}
+			</if>
+			<if test="cpuBrand != null">
+				and cpuBrand = #{cpuBrand}
+			</if>
+			<if test="cpuCoreCount != null">
+				and cpuCoreCount = #{cpuCoreCount}
+			</if>
+			<if test="ram != null">
+				and RAM = #{ram}
+			</if>
+			<if test="storage != null">
+				and STORAGE = #{storage}
+			</if>
+		</where>
+	</select>
+	<select id="findOne" resultType="Cellphone">
+		select * from cellphone where ID=#{id}
+	</select>
+	<select id="findAll" resultType="Cellphone">
+		select * from cellphone
+	</select>
+</mapper>

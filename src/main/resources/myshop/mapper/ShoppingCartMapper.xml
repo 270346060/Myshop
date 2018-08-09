@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="myshop.mapper.ShoppingCartMapper">
+	<select id="itemExists" resultType="int">
+    select count(*) from SHOPPING_CART_ITEM 
+    where USER_ID = #{userId} and CELLPHONE_ID = #{cellphoneId}
+  </select>
+  
+  <update id="incItemAmount">
+    update SHOPPING_CART_ITEM 
+    set QUANTITY = QUANTITY + #{amount} 
+    where USER_ID = #{userId} and CELLPHONE_ID = #{cellphoneId}
+  </update>
+  
+  <insert id="createItem">
+    insert into SHOPPING_CART_ITEM (USER_ID, CELLPHONE_ID, QUANTITY)
+    values (#{userId}, #{cellphoneId}, #{amount})
+  </insert>
+  
+  <select id="findAllItems" resultMap="itemDetailsMap">
+	select
+	i.USER_ID, i.QUANTITY,
+	c.ID CELLPHONE_ID, c.BRAND CELLPHONE_BRAND, c.MODEL CELLPHONE_MODEL,
+	c.COLOR CELLPHONE_COLOR, c.PRICE CELLPHONE_PRICE
+	from SHOPPING_CART_ITEM i
+	inner join CELLPHONE c on i.CELLPHONE_ID = c.ID
+	where i.USER_ID = #{userId}
+	order by c.ID
+  </select>
+  
+  <resultMap type="ShoppingCartItem" id="itemDetailsMap">
+	<id column="USER_ID"/>
+	<id column="CELLPHONE_ID"/>
+  	<result column="QUANTITY" property="quantity"/>
+	<association property="cellphone" javaType="Cellphone">
+	<id column="CELLPHONE_ID" property="id" />
+	<result column="CELLPHONE_BRAND" property="brand" />
+	<result column="CELLPHONE_MODEL" property="model" />
+	<result column="CELLPHONE_COLOR" property="color" />
+	<result column="CELLPHONE_PRICE" property="price" />
+	</association>
+</resultMap>
+  <delete id="removeItem">
+    delete from SHOPPING_CART_ITEM where USER_ID = #{userId} and CELLPHONE_ID = #{cellphoneId}
+  </delete>
+  <!-- <delete id="deleteItemsByUserId">
+    delete from SHOPPING_CART_ITEM where USER_ID = #{userId}
+  </delete>
+  
+  <update id="updateItemQuantity">
+    update SHOPPING_CART_ITEM 
+    set QUANTITY = #{quantity} 
+    where USER_ID = #{userId} and CELLPHONE_ID = #{cellphoneId}    
+  </update> -->
+</mapper>
